@@ -574,9 +574,25 @@ document.getElementById('surveyForm').addEventListener('submit', function(e) {
   submitBtn.textContent = 'Submitting…';
   submitBtn.disabled = true;
 
-  // Use GET request with data as query param - most reliable for Apps Script
-  const encodedData = encodeURIComponent(JSON.stringify(payload));
-  fetch(SCRIPT_URL + '?data=' + encodedData, { method: 'GET', mode: 'no-cors' }).catch(() => {});
+  // Build a hidden form and submit it to the script URL
+  const hiddenForm = document.createElement('form');
+  hiddenForm.method = 'POST';
+  hiddenForm.action = SCRIPT_URL;
+  hiddenForm.target = 'hidden_iframe';
+  hiddenForm.style.display = 'none';
+
+  const input = document.createElement('input');
+  input.type = 'hidden';
+  input.name = 'payload';
+  input.value = JSON.stringify(payload);
+  hiddenForm.appendChild(input);
+
+  const iframe = document.createElement('iframe');
+  iframe.name = 'hidden_iframe';
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+  document.body.appendChild(hiddenForm);
+  hiddenForm.submit();
 
   setTimeout(() => {
     document.getElementById('surveyForm').style.display = 'none';
