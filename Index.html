@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenAI Academic Use Survey</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #f0f4f8;
+    color: #1a202c;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .header {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+  }
+  .header p {
+    font-size: 0.92rem;
+    opacity: 0.88;
+    line-height: 1.6;
+  }
+  .header .meta {
+    margin-top: 1rem;
+    font-size: 0.82rem;
+    opacity: 0.75;
+    display: flex; gap: 1.5rem; flex-wrap: wrap;
+  }
+  .section-card {
+    background: white;
+    border-radius: 14px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  }
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #7c3aed;
+    margin-bottom: 0.4rem;
+  }
+  .section-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 0.3rem;
+  }
+  .section-desc {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+  .question {
+    margin-bottom: 1.5rem;
+  }
+  .question label {
+    display: block;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+  }
+  .question label span.req {
+    color: #e53e3e;
+    margin-left: 2px;
+  }
+  .question select, .question input[type="number"], .question input[type="text"] {
+    width: 100%;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.9rem;
+    color: #1a202c;
+    background: #f8fafc;
+    transition: border-color 0.2s;
+    appearance: auto;
+  }
+  .question select:focus, .question input:focus {
+    outline: none;
+    border-color: #7c3aed;
+    background: white;
+  }
+  /* Checkboxes */
+  .checkbox-group {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .checkbox-group label {
+    display: flex; align-items: center; gap: 0.4rem;
+    background: #f1f5f9; border: 1.5px solid #e2e8f0;
+    border-radius: 8px; padding: 0.45rem 0.85rem;
+    font-size: 0.88rem; font-weight: 400; cursor: pointer;
+    transition: all 0.15s; color: #334155;
+  }
+  .checkbox-group label:has(input:checked) {
+    background: #ede9fe; border-color: #7c3aed; color: #4f46e5; font-weight: 600;
+  }
+  .checkbox-group input[type="checkbox"] { accent-color: #7c3aed; width: 15px; height: 15px; }
+
+  /* Likert */
+  .likert-wrapper { overflow-x: auto; }
+  .likert-table {
+    width: 100%; border-collapse: collapse; font-size: 0.82rem; min-width: 480px;
+  }
+  .likert-table thead th {
+    background: #f8fafc; color: #64748b; font-weight: 600;
+    padding: 0.55rem 0.3rem; text-align: center; border-bottom: 2px solid #e2e8f0;
+    font-size: 0.78rem;
+  }
+  .likert-table thead th:first-child { text-align: left; padding-left: 0.5rem; }
+  .likert-table tbody tr { border-bottom: 1px solid #f1f5f9; }
+  .likert-table tbody tr:last-child { border-bottom: none; }
+  .likert-table tbody tr:hover { background: #fafaf9; }
+  .likert-table td {
+    padding: 0.7rem 0.3rem; text-align: center; vertical-align: middle;
+  }
+  .likert-table td:first-child {
+    text-align: left; padding-left: 0.5rem; color: #334155; font-size: 0.87rem;
+    line-height: 1.4; min-width: 220px;
+  }
+  .likert-table input[type="radio"] { accent-color: #7c3aed; width: 16px; height: 16px; cursor: pointer; }
+  .subsection-label {
+    font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #4f46e5; margin: 1.2rem 0 0.5rem;
+    padding: 0.25rem 0.6rem; background: #ede9fe; display: inline-block; border-radius: 5px;
+  }
+  /* Radio select (frequency) */
+  .radio-group { display: flex; flex-direction: column; gap: 0.45rem; }
+  .radio-group label {
+    display: flex; align-items: center; gap: 0.55rem;
+    background: #f8fafc; border: 1.5px solid #e2e8f0;
+    border-radius: 8px; padding: 0.5rem 0.85rem;
+    font-size: 0.88rem; font-weight: 400; cursor: pointer;
+    transition: all 0.15s; color: #334155;
+  }
+  .radio-group label:has(input:checked) {
+    background: #ede9fe; border-color: #7c3aed; color: #4f46e5; font-weight: 600;
+  }
+  .radio-group input[type="radio"] { accent-color: #7c3aed; width: 15px; height: 15px; }
+  /* Progress */
+  .progress-bar-wrap {
+    background: #e2e8f0; border-radius: 99px; height: 6px; margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+  .progress-bar { height: 100%; background: linear-gradient(90deg, #4f46e5, #7c3aed); border-radius: 99px; transition: width 0.4s; }
+  .progress-label { font-size: 0.78rem; color: #94a3b8; margin-bottom: 0.4rem; text-align: right; }
+  /* Submit */
+  .submit-btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: opacity 0.2s, transform 0.1s;
+    letter-spacing: 0.02em;
+  }
+  .submit-btn:hover { opacity: 0.92; }
+  .submit-btn:active { transform: scale(0.99); }
+  .consent-box {
+    background: #fefce8; border: 1.5px solid #fde68a; border-radius: 10px;
+    padding: 1rem 1.2rem; font-size: 0.85rem; color: #78350f; line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  .consent-box strong { display: block; margin-bottom: 0.3rem; color: #92400e; }
+  .consent-check { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.88rem; color: #334155; margin-top: 0.75rem; }
+  .consent-check input { margin-top: 2px; accent-color: #7c3aed; width: 16px; height: 16px; flex-shrink: 0; }
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 3rem 2rem;
+  }
+  .success-screen .icon { font-size: 3.5rem; margin-bottom: 1rem; }
+  .success-screen h2 { font-size: 1.5rem; font-weight: 700; color: #1a202c; margin-bottom: 0.5rem; }
+  .success-screen p { color: #64748b; font-size: 0.92rem; }
+  .divider { border: none; border-top: 1px solid #f1f5f9; margin: 1.2rem 0; }
+  @media (max-width: 560px) {
+    .header { padding: 1.75rem 1.25rem; }
+    .section-card { padding: 1.5rem 1.25rem; }
+    .header h1 { font-size: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>Assistive and Substitutive Generative AI Use for Academic Tasks Among University Students</h1>
+    <p>This survey explores how university students use AI tools for academic work, and how that relates to confidence and anxiety in their studies. Your responses are completely anonymous.</p>
+    <div class="meta">
+      <span>⏱ ~8–10 minutes</span>
+      <span>📋 ~28–30 items</span>
+      <span>🔒 Anonymous &amp; voluntary</span>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-label" id="progressLabel">Section 1 of 4</div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar" id="progressBar" style="width:25%"></div>
+  </div>
+
+  <form id="surveyForm" novalidate>
+
+    <!-- CONSENT -->
+    <div class="section-card">
+      <div class="section-label">Before You Begin</div>
+      <div class="section-title">Informed Consent</div>
+      <div class="consent-box">
+        <strong>Please read carefully before proceeding.</strong>
+        This study is conducted as part of academic research examining generative AI use patterns among university students. Participation is entirely voluntary and anonymous — no identifying information is collected. You may withdraw at any time without consequence. Data will be used solely for research purposes. By ticking the box below, you confirm you meet the inclusion criteria and consent to participate.
+      </div>
+      <div class="consent-check">
+        <input type="checkbox" id="consent" required>
+        <label for="consent">I am currently enrolled at a university, aged 18–35, have used at least one generative AI tool for academic purposes, and I consent to participate in this study.</label>
+      </div>
+    </div>
+
+    <!-- SECTION 1: DEMOGRAPHICS -->
+    <div class="section-card" id="sec1">
+      <div class="section-label">Section 1</div>
+      <div class="section-title">Demographics</div>
+      <div class="section-desc">Please answer the following background questions about yourself.</div>
+
+      <div class="question">
+        <label for="age">1. What is your age? <span class="req">*</span></label>
+        <input type="number" id="age" name="age" min="18" max="35" placeholder="Enter your age (18–35)" required>
+      </div>
+
+      <div class="question">
+        <label for="gender">2. What is your gender? <span class="req">*</span></label>
+        <select id="gender" name="gender" required>
+          <option value="">— Select —</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Non-binary / gender diverse</option>
+          <option>Prefer to self-describe</option>
+          <option>Prefer not to say</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label for="yearStudy">3. What is your current year of study? <span class="req">*</span></label>
+        <select id="yearStudy" name="yearStudy" required>
+          <option value="">— Select —</option>
+          <option>1st year undergraduate</option>
+          <option>2nd year undergraduate</option>
+          <option>3rd year undergraduate</option>
+          <option>4th year undergraduate</option>
+          <option>Postgraduate (Masters)</option>
+          <option>Postgraduate (PhD / Doctoral)</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label for="faculty">4. What is your faculty or discipline? <span class="req">*</span></label>
+        <select id="faculty" name="faculty" required>
+          <option value="">— Select —</option>
+          <option>Arts, Humanities &amp; Languages</option>
+          <option>Social Sciences</option>
+          <option>Business &amp; Economics</option>
+          <option>Law</option>
+          <option>STEM (Science, Technology, Engineering, Maths)</option>
+          <option>Medicine, Health &amp; Life Sciences</option>
+          <option>Education</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label>5. Which AI tools have you used for academic work? <span class="req">*</span> <em style="font-weight:400;color:#64748b;">(Select all that apply)</em></label>
+        <div class="checkbox-group" id="aiTools">
+          <label><input type="checkbox" name="aiTool" value="ChatGPT"> ChatGPT</label>
+          <label><input type="checkbox" name="aiTool" value="Gemini"> Gemini</label>
+          <label><input type="checkbox" name="aiTool" value="Copilot"> Copilot</label>
+          <label><input type="checkbox" name="aiTool" value="Claude"> Claude</label>
+          <label><input type="checkbox" name="aiTool" value="Other"> Other</label>
+        </div>
+      </div>
+
+      <div class="question">
+        <label>6. How frequently do you use AI tools for academic work? <span class="req">*</span></label>
+        <div class="radio-group">
+          <label><input type="radio" name="frequency" value="daily" required> Daily</label>
+          <label><input type="radio" name="frequency" value="few_week"> A few times a week</label>
+          <label><input type="radio" name="frequency" value="few_month"> A few times a month</label>
+          <label><input type="radio" name="frequency" value="rarely"> Rarely</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: AI USE SCALE -->
+    <div class="section-card" id="sec2">
+      <div class="section-label">Section 2</div>
+      <div class="section-title">Generative AI Use Scale</div>
+      <div class="section-desc">
+        The following statements describe different ways of using AI tools for academic tasks. Please rate how much you agree with each statement.<br><br>
+        <strong>1</strong> = Strongly Disagree &nbsp;|&nbsp; <strong>2</strong> = Disagree &nbsp;|&nbsp; <strong>3</strong> = Neutral &nbsp;|&nbsp; <strong>4</strong> = Agree &nbsp;|&nbsp; <strong>5</strong> = Strongly Agree
+      </div>
+
+      <div class="subsection-label">Assistive AI Use</div>
+      <div class="likert-wrapper">
+        <table class="likert-table">
+          <thead>
+            <tr>
+              <th style="min-width:230px">Statement</th>
+              <th>1<br><span style="font-weight:400">SD</span></th>
+              <th>2<br><span style="font-weight:400">D</span></th>
+              <th>3<br><span style="font-weight:400">N</span></th>
+              <th>4<br><span style="font-weight:400">A</span></th>
+              <th>5<br><span style="font-weight:400">SA</span></th>
+            </tr>
+          </thead>
+          <tbody id="assistiveItems">
+            <!-- Injected by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="subsection-label" style="margin-top:1.6rem">Substitutive AI Use</div>
+      <div class="likert-wrapper">
+        <table class="likert-table">
+          <thead>
+            <tr>
+              <th style="min-width:230px">Statement</th>
+              <th>1<br><span style="font-weight:400">SD</span></th>
+              <th>2<br><span style="font-weight:400">D</span></th>
+              <th>3<br><span style="font-weight:400">N</span></th>
+              <th>4<br><span style="font-weight:400">A</span></th>
+              <th>5<br><span style="font-weight:400">SA</span></th>
+            </tr>
+          </thead>
+          <tbody id="substitutiveItems">
+            <!-- Injected by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 3: SELF-EFFICACY -->
+    <div class="section-card" id="sec3">
+      <div class="section-label">Section 3</div>
+      <div class="section-title">Academic Self-Efficacy</div>
+      <div class="section-desc">
+        The following statements are about your confidence in your academic abilities. Please rate how much you agree with each statement.<br>
+        <em style="font-size:0.8rem;color:#94a3b8;">(Chemers, Hu &amp; Garcia, 2001 — Academic Self-Efficacy Scale)</em><br><br>
+        <strong>1</strong> = Strongly Disagree &nbsp;|&nbsp; <strong>2</strong> = Disagree &nbsp;|&nbsp; <strong>3</strong> = Neutral &nbsp;|&nbsp; <strong>4</strong> = Agree &nbsp;|&nbsp; <strong>5</strong> = Strongly Agree
+      </div>
+      <div class="likert-wrapper">
+        <table class="likert-table">
+          <thead>
+            <tr>
+              <th style="min-width:230px">Statement</th>
+              <th>1<br><span style="font-weight:400">SD</span></th>
+              <th>2<br><span style="font-weight:400">D</span></th>
+              <th>3<br><span style="font-weight:400">N</span></th>
+              <th>4<br><span style="font-weight:400">A</span></th>
+              <th>5<br><span style="font-weight:400">SA</span></th>
+            </tr>
+          </thead>
+          <tbody id="efficacyItems"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 4: ANXIETY -->
+    <div class="section-card" id="sec4">
+      <div class="section-label">Section 4</div>
+      <div class="section-title">Academic Anxiety</div>
+      <div class="section-desc">
+        The following statements are about how you feel when engaging in academic activities. Please rate how much each statement applies to you.<br>
+        <em style="font-size:0.8rem;color:#94a3b8;">(Pekrun et al., 2011 — Achievement Emotions Questionnaire, Learning Anxiety Subscale)</em><br><br>
+        <strong>1</strong> = Strongly Disagree &nbsp;|&nbsp; <strong>2</strong> = Disagree &nbsp;|&nbsp; <strong>3</strong> = Neutral &nbsp;|&nbsp; <strong>4</strong> = Agree &nbsp;|&nbsp; <strong>5</strong> = Strongly Agree
+      </div>
+      <div class="likert-wrapper">
+        <table class="likert-table">
+          <thead>
+            <tr>
+              <th style="min-width:230px">Statement</th>
+              <th>1<br><span style="font-weight:400">SD</span></th>
+              <th>2<br><span style="font-weight:400">D</span></th>
+              <th>3<br><span style="font-weight:400">N</span></th>
+              <th>4<br><span style="font-weight:400">A</span></th>
+              <th>5<br><span style="font-weight:400">SA</span></th>
+            </tr>
+          </thead>
+          <tbody id="anxietyItems"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="section-card">
+      <div class="section-title" style="margin-bottom:0.3rem">Almost done!</div>
+      <p style="font-size:0.88rem;color:#64748b;margin-bottom:1.2rem;line-height:1.6;">Please review your responses before submitting. Once submitted, your anonymous data will be recorded for analysis.</p>
+      <div id="errorMsg" style="display:none;color:#dc2626;font-size:0.85rem;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:0.75rem 1rem;margin-bottom:1rem;"></div>
+      <button type="submit" class="submit-btn">Submit Survey →</button>
+    </div>
+
+  </form>
+
+  <!-- SUCCESS -->
+  <div class="section-card success-screen" id="successScreen">
+    <div class="icon">✅</div>
+    <h2>Thank you for participating!</h2>
+    <p>Your responses have been recorded. Your contribution helps us better understand how students use AI in their academic lives.</p>
+  </div>
+
+</div>
+
+<script>
+const assistiveStatements = [
+  "I use AI to brainstorm or generate ideas before I start my own work.",
+  "I use AI to check or improve work I have already written.",
+  "I use AI to explain concepts I find difficult to understand.",
+  "I use AI to get feedback on my drafts before submitting.",
+  "I use AI to explore different perspectives on a topic."
+];
+
+const substitutiveStatements = [
+  "I use AI to generate complete assignments or essays that I submit.",
+  "I use AI to answer questions or solve problems without attempting them myself first.",
+  "I use AI to produce work that I present as my own without significant changes.",
+  "I rely on AI to do tasks I could do myself but do not want to spend time on."
+];
+
+// Chemers, Hu & Garcia (2001) ASES — 8 representative items
+const efficacyStatements = [
+  "I am confident I can understand the most complex material presented in my courses.",
+  "I am confident I will do an excellent job on assignments and tests.",
+  "I expect to do well in my courses.",
+  "I am certain I can master the skills being taught in my programme.",
+  "I believe I can do well even when the material is difficult.",
+  "I am confident that I can keep up with the demands of my studies.",
+  "I feel prepared to meet the academic challenges ahead of me.",
+  "I am sure I will be able to complete my degree successfully."
+];
+
+// Pekrun et al. (2011) AEQ — learning anxiety subscale, 7 items
+const anxietyStatements = [
+  "I get tense and nervous while studying.",
+  "I feel anxious when I think about the amount of material I have to learn.",
+  "When I study, I worry about whether I will be able to understand the material.",
+  "I feel uneasy when I work on difficult assignments.",
+  "Worries about my studies run through my mind when I am trying to learn.",
+  "I feel stressed when I sit down to study.",
+  "I am anxious about whether I will be able to keep up with the workload of my courses."
+];
+
+function buildLikertRows(statements, prefix, tbody) {
+  statements.forEach((stmt, i) => {
+    const tr = document.createElement('tr');
+    let cells = `<td>${i+1}. ${stmt}</td>`;
+    for (let v = 1; v <= 5; v++) {
+      cells += `<td><input type="radio" name="${prefix}_${i}" value="${v}" required></td>`;
+    }
+    tr.innerHTML = cells;
+    tbody.appendChild(tr);
+  });
+}
+
+buildLikertRows(assistiveStatements, 'assistive', document.getElementById('assistiveItems'));
+buildLikertRows(substitutiveStatements, 'substitutive', document.getElementById('substitutiveItems'));
+buildLikertRows(efficacyStatements, 'efficacy', document.getElementById('efficacyItems'));
+buildLikertRows(anxietyStatements, 'anxiety', document.getElementById('anxietyItems'));
+
+// Progress update on scroll
+const sections = ['sec1','sec2','sec3','sec4'];
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const idx = sections.indexOf(e.target.id);
+      if (idx >= 0) {
+        const pct = ((idx+1)/4)*100;
+        document.getElementById('progressBar').style.width = pct + '%';
+        document.getElementById('progressLabel').textContent = `Section ${idx+1} of 4`;
+      }
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(id => { const el = document.getElementById(id); if(el) observer.observe(el); });
+
+document.getElementById('surveyForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const err = document.getElementById('errorMsg');
+  err.style.display = 'none';
+
+  // Consent
+  if (!document.getElementById('consent').checked) {
+    err.textContent = 'Please confirm your consent before submitting.';
+    err.style.display = 'block';
+    document.getElementById('consent').scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+
+  // Validate AI tools checkbox
+  const toolsChecked = document.querySelectorAll('input[name="aiTool"]:checked');
+  if (toolsChecked.length === 0) {
+    err.textContent = 'Please select at least one AI tool you have used.';
+    err.style.display = 'block';
+    document.getElementById('aiTools').scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+
+  // Check all radio groups answered
+  const radioGroups = ['frequency'];
+  const likertPrefixes = [
+    ...assistiveStatements.map((_,i)=>`assistive_${i}`),
+    ...substitutiveStatements.map((_,i)=>`substitutive_${i}`),
+    ...efficacyStatements.map((_,i)=>`efficacy_${i}`),
+    ...anxietyStatements.map((_,i)=>`anxiety_${i}`)
+  ];
+  const allRadios = [...radioGroups, ...likertPrefixes];
+  for (const name of allRadios) {
+    if (!document.querySelector(`input[name="${name}"]:checked`)) {
+      err.textContent = 'Please answer all questions before submitting.';
+      err.style.display = 'block';
+      const el = document.querySelector(`input[name="${name}"]`);
+      if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+  }
+
+  // Collect all data
+  const payload = {};
+  payload.timestamp = new Date().toISOString();
+  payload.age = document.getElementById('age').value;
+  payload.gender = document.getElementById('gender').value;
+  payload.yearOfStudy = document.getElementById('yearStudy').value;
+  payload.faculty = document.getElementById('faculty').value;
+  payload.aiToolsUsed = [...document.querySelectorAll('input[name="aiTool"]:checked')].map(c=>c.value).join(', ');
+  payload.frequency = document.querySelector('input[name="frequency"]:checked').value;
+
+  assistiveStatements.forEach((s,i) => {
+    payload[`assistive_${i+1}`] = document.querySelector(`input[name="assistive_${i}"]:checked`).value;
+  });
+  substitutiveStatements.forEach((s,i) => {
+    payload[`substitutive_${i+1}`] = document.querySelector(`input[name="substitutive_${i}"]:checked`).value;
+  });
+  efficacyStatements.forEach((s,i) => {
+    payload[`efficacy_${i+1}`] = document.querySelector(`input[name="efficacy_${i}"]:checked`).value;
+  });
+  anxietyStatements.forEach((s,i) => {
+    payload[`anxiety_${i+1}`] = document.querySelector(`input[name="anxiety_${i}"]:checked`).value;
+  });
+
+  // Submit to Google Sheets
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyeWjoS03M6BkUlxCC9pF687gsSLokhN23ba6L_-89MS2sQ5Y4P2AhK0E8HY_-mieu/exec';
+
+  const submitBtn = document.querySelector('.submit-btn');
+  submitBtn.textContent = 'Submitting…';
+  submitBtn.disabled = true;
+
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).then(() => {
+    document.getElementById('surveyForm').style.display = 'none';
+    document.getElementById('successScreen').style.display = 'block';
+    document.getElementById('progressBar').style.width = '100%';
+    document.getElementById('progressLabel').textContent = 'Completed ✓';
+    window.scrollTo({top:0, behavior:'smooth'});
+  }).catch(() => {
+    err.textContent = 'There was a problem submitting. Please check your connection and try again.';
+    err.style.display = 'block';
+    submitBtn.textContent = 'Submit Survey →';
+    submitBtn.disabled = false;
+  });
+});
+</script>
+</body>
+</html>
